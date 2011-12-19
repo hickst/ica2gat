@@ -1,6 +1,7 @@
 (ns ica2gat.core
   (:require clojure.contrib.combinatorics)
   (:require clojure.contrib.io)
+  (:require clojure.set)
   (:gen-class)
 )
 
@@ -19,7 +20,13 @@
     (println (str (first p) "," (second p) ",Undirected"))))
 
 (defn -main [ & args]
-  (let [filename (first args)]
-    (write-pairs (mapcat make-pairs (read-components filename)))))
+  (let [ filename (first args)
+         components (read-components filename)
+         nodes (sort (apply clojure.set/union components))
+         pairs (mapcat make-pairs components) ]
+    nodes
+    ;; (write-pairs pairs)
+  )
+)
 
 ;; (-main "resources/sample-input-file")
