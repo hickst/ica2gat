@@ -1,0 +1,13 @@
+# ica2gat
+
+Clojure program to generate data for graph analysis tools from ICA input
+
+## Usage
+
+java -jar ica2gat.jar [-d] [-g outfile.g] [-m outfile.m] infile
+
+## License
+
+Copyright (C) 2011 Tohono Consulting.
+
+Distributed under the Eclipse Public License, the same as Clojure.
