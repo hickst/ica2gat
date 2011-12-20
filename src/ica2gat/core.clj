@@ -1,18 +1,18 @@
 (ns ica2gat.core
-  (:require clojure.contrib.combinatorics)
-  (:require clojure.contrib.io)
-  (:require clojure.set)
+  (:require [clojure.math.combinatorics :as comb])
+  (:require [clojure.java.io :as io])
+  (:require [clojure.set :as set])
+  (:require [ica2gat.adjmat])
   (:gen-class)
 )
 
 (defn read-components [filename]
-  (clojure.contrib.io/with-in-reader
-    (clojure.java.io/file filename)
-    (read)))
+  (with-open [rdr (java.io.PushbackReader. (io/reader filename))]
+    (read rdr)))
 
 (defn make-pairs [aSet]
   (filter (fn [[n1 n2]] (not= n1 n2))
-          (clojure.contrib.combinatorics/selections aSet 2)))
+          (comb/selections aSet 2)))
 
 (defn write-pairs [pairs]
   (println "Source,Target,Type")
@@ -22,9 +22,9 @@
 (defn -main [ & args]
   (let [ filename (first args)
          components (read-components filename)
-         nodes (sort (apply clojure.set/union components))
+         nodes (sort (apply set/union components))
          pairs (mapcat make-pairs components) ]
-    nodes
+    (ica2gat.adjmat.AdjacencyMatrix. nodes {})
     ;; (write-pairs pairs)
   )
 )
