@@ -29,9 +29,7 @@
 )
 
 
-(defrecord AdjacencyMatrix [node-names weights])
-
-(extend-type AdjacencyMatrix
+(defrecord AdjacencyMatrix [node-names weights]
   AdjacencyMatrixProtocol
   (add-pairs [_ pairs] :add-pairs)
   (lower-triangle [_] :lower-triangle)
