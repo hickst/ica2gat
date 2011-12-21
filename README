@@ -6,7 +6,7 @@ This program reads sets of node names, representing the "components"
 found by Independent Component Analysis and produces data files
 suitable for ingestion by Graph Analysis Tools. The types of output
 data files produced may be specified on the command line and currently
-includes a sequence of node adjacency pairs (for Gepphi) and/or an
+includes a sequence of node adjacency pairs (for Gephi) and/or an
 adjacency matrix (for Olaf Sporns' Brain Connectivity Toolbox (MATLAB)).
 
 The ICA components are represented in the input file as a Clojure
@@ -25,7 +25,7 @@ java -jar ica2gat.jar [-d] (-g outfile.g | -m outfile.m) infile
 
 where:
    -d = treat all nodes as directed (CURRENTLY NOT IMPLEMENTED)
-   -g = output a node pair sequence file (for Gepphi)
+   -g = output a node pair sequence file (for Gephi)
    -m = output a CSV adjacency matrix (for BCT in MATLAB)
 
 
