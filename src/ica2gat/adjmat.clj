@@ -53,7 +53,7 @@
 )
 
 
-(defn make-pairs [nodes]
+(defn- make-pairs [nodes]
   "Return a sequence of all possible pairs of nodes, except pairs
    containing the same node twice."
   (filter (fn [[n1 n2]] (not= n1 n2))
@@ -65,4 +65,4 @@
   (let [ nodes (sort (apply set/union components))
          pairs (mapcat make-pairs components)
          freq-map (frequencies pairs) ]
-    (ica2gat.adjmat.AdjacencyMatrix. nodes freq-map)))
+    (AdjacencyMatrix. nodes freq-map)))
