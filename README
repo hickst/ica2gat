@@ -4,10 +4,11 @@ Clojure program to generate data for graph analysis tools from ICA input.
 
 This program reads sets of node names, representing the "components"
 found by Independent Component Analysis and produces data files
-suitable for ingestion by Graph Analysis Tools. The types of output
+suitable for ingestion by graph analysis tools. The types of output
 data files produced may be specified on the command line and currently
-includes a sequence of node adjacency pairs (for Gephi) and/or an
-adjacency matrix (for Olaf Sporns' Brain Connectivity Toolbox (MATLAB)).
+includes a sequence of node adjacency tuples (for Gephi) and/or partial
+or complete adjacency matrices (for Olaf Sporns' Brain Connectivity Toolbox
+(in MATLAB)).
 
 The ICA components are represented in the input file as a Clojure
 data structure. The input data structure must be a Clojure Sequence of
@@ -17,16 +18,26 @@ component.
 Example input data structure with 3 components:
   [ #{LGN STG_R STG_L} #{Vermis LGN BA1} #{BA1 BA2 LGN STG_R Brocas} ]
 
+The output files will be named according to the specified contents and
+the required basename. For example, the output file for the entire
+adjacency matrix will be named 'XXX_mat.csv', if XXX was specified
+as the basename argument.
 
 
 ## Usage
 
-java -jar ica2gat.jar [-d] (-g outfile.g | -m outfile.m) infile
+java -jar ica2gat.jar [-d] (-glt outfile | -mat outfile) infile
+
+java -jar ica2gat.jar [-d] (-glt | -gut | -mat | -mlt | -mut)... -o outfile-basename infile-name
 
 where:
    -d = treat all nodes as directed (CURRENTLY NOT IMPLEMENTED)
-   -g = output a node pair sequence file (for Gephi)
-   -m = output a CSV adjacency matrix (for BCT in MATLAB)
+   -glt = output a list of lower triangle data tuples (for Gephi)
+   -gut = output a list of upper triangle data tuples (for Gephi)
+   -mat = output an adjacency matrix (for BCT in MATLAB)
+   -mlt = output lower triangle of adjacency matrix (for BCT in MATLAB)
+   -mut = output upper triangle of adjacency matrix (for BCT in MATLAB)
+   -o = the basename (without extension) for the output file(s)
 
 
 ## License
