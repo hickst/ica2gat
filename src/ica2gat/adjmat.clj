@@ -8,19 +8,15 @@
    the upper and/or lower triangles of the adjacency matrix, and returning
    the matrix itself."
 
-  (add-pairs [this pairs]
-    "Add a sequence of node pairs, each representing an edge between adjacent nodes"
-  )
-
-  (lower-triangle [this]
+  (lower-triangle [amat]
     "Return a sequence of node pairs from the lower triangle of the adjacency matrix"
   )
 
-  (upper-triangle [this]
+  (upper-triangle [amat]
     "Return a sequence of node pairs from the upper triangle of the adjacency matrix"
   )
 
-  (matrix [this]
+  (matrix [amat]
     "Return a sequence of sequences of node pairs from adjacency matrix.
      Each sequence represents a row in the adjacency matrix, with the first
      row being the node names (row and column labels).
@@ -31,8 +27,16 @@
 
 (defrecord AdjacencyMatrix [node-names weights]
   AdjacencyMatrixProtocol
-  (add-pairs [_ pairs] :add-pairs)
-  (lower-triangle [_] :lower-triangle)
-  (upper-triangle [_] :upper-triangle)
-  (matrix [_] :matrix)
+
+  (lower-triangle [amat] :lower-triangle)
+  (upper-triangle [amat] :upper-triangle)
+
+  (matrix [amat]
+    (let [ node-names (seq (.node-names amat))
+           amat-dim (count node-names)
+           weights (.weights amat) ]
+      (cons node-names
+        (partition amat-dim
+          (for [k1 node-names k2 node-names]
+            (get weights (seq [k1 k2]) 0))))))
 )
