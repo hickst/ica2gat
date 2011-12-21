@@ -16,15 +16,9 @@
   (let [ filename (first args)
          components (read-components filename)
          amat (ica2gat.adjmat/make-adjacency-matrix components) ]
-    (.write-matrix amat)
-    ;; (.write-pairs amat)
+    ;; (.write-matrix amat)
     amat
   )
 )
 
 ;; (-main "resources/sample-input-file")
-
-;; (defn write-pairs [amat]
-;;   (println "Source,Target,Type")
-;;   (doseq [p (.node-names amat)]
-;;     (println (str (first p) "," (second p) ",Undirected"))))
