@@ -14,11 +14,20 @@
      the adjacency matrix, with the form: [node-name1 node-name2 weight]"
   )
 
+  (lower-triangle-matrix [amat]
+    "Return a matrix containing the data of the lower triangle of the
+     adjacency matrix, with zeros in the diagonal and upper triangle.
+     The returned matrix is a sequence of sequences, each of the latter
+     representing a row in the adjacency matrix. The first row contains
+     the node names (row and column labels).
+     Example: for a 3x3 matrix [[:A :B :C][0 0 0][4 0 0][7 8 0]]"
+  )
+
   (matrix [amat]
-    "Return a sequence of sequences of node pairs from adjacency matrix.
-     Each sequence represents a row in the adjacency matrix, with the first
-     row being the node names (row and column labels).
-     Example: for a 3x3 matrix [[:A :B :C][1 2 3][4 5 6][7 8 9]]"
+    "Return the adjacency matrix as a sequence of sequences, each of
+     the latter representing a row. The first row contains the node
+     names (row and column labels). The diagonal is zeroed out.
+     Example: for a 3x3 matrix [[:A :B :C][0 2 3][4 0 6][7 8 0]]"
   )
 
   (upper-triangle [amat]
@@ -26,9 +35,24 @@
      the adjacency matrix, with the form: [node-name1 node-name2 weight]"
   )
 
+  (upper-triangle-matrix [amat]
+    "Return a matrix containing the data of the upper triangle of the
+     adjacency matrix, with zeros in the diagonal and lower triangle.
+     The returned matrix is a sequence of sequences, each of the latter
+     representing a row in the adjacency matrix. The first row contains
+     the node names (row and column labels).
+     Example: for a 3x3 matrix [[:A :B :C][0 2 3][0 0 6][0 0 0]]"
+  )
+
   (write-lower-triangle [amat]
     "Write the lower triangle of the adjacency matrix to the current
      value of *out* in labeled CSV form."
+  )
+
+  (write-lower-triangle-matrix [amat]
+    "Write a matrix containing the lower triangle of the adjacency matrix
+     to the current value of *out* in labeled CSV form. The diagonal and
+     upper triangle are zeroed out."
   )
 
   (write-matrix [amat]
@@ -39,6 +63,12 @@
     "Write the upper triangle of the adjacency matrix to the current
      value of *out* in labeled CSV form."
   )
+
+  (write-upper-triangle-matrix [amat]
+    "Write a matrix containing the upper triangle of the adjacency matrix
+     to the current value of *out* in labeled CSV form. The diagonal and
+     lower triangle are zeroed out."
+  )
 )
 
 
@@ -48,29 +78,51 @@
   (lower-triangle [amat]
     (let [ nodes (seq (.nodes amat))
            weights (.weights amat) ]
-      (filter identity
-        (for [k1 nodes k2 nodes]
-          (if (> (.compareTo k1 k2) 0)
+      (filter identity                      ; filter out nil elements
+        (for [k1 nodes k2 nodes]            ; for all possible keys
+          (if (> (.compareTo k1 k2) 0)      ; for lower triangle keys
             (if-let [w (get weights (seq [k1 k2]))]
               [k1 k2 w]))))))
+
+  (lower-triangle-matrix [amat]
+    (let [ nodes (seq (.nodes amat))
+           amat-dim (count nodes)
+           weights (.weights amat) ]
+      (cons nodes                           ; prepend node name labels
+        (partition amat-dim                 ; divide vector into rows
+          (for [k1 nodes k2 nodes]          ; for all possible keys
+            (if (> (.compareTo k1 k2) 0)    ; for lower triangle keys
+              (get weights (seq [k1 k2]) 0) ; get actual weight
+              0))))))                       ; return zero for all other keys
 
   (matrix [amat]
     (let [ nodes (seq (.nodes amat))
            amat-dim (count nodes)
            weights (.weights amat) ]
-      (cons nodes
-        (partition amat-dim
-          (for [k1 nodes k2 nodes]
+      (cons nodes                           ; prepend node name labels
+        (partition amat-dim                 ; divide vector into rows
+          (for [k1 nodes k2 nodes]          ; for all possible keys
             (get weights (seq [k1 k2]) 0))))))
 
   (upper-triangle [amat]
     (let [ nodes (seq (.nodes amat))
            weights (.weights amat) ]
-      (filter identity
-        (for [k1 nodes k2 nodes]
-          (if (< (.compareTo k1 k2) 0)
+      (filter identity                      ; filter out nil elements
+        (for [k1 nodes k2 nodes]            ; for all possible keys
+          (if (< (.compareTo k1 k2) 0)      ; for upper triangle keys
             (if-let [w (get weights (seq [k1 k2]))]
               [k1 k2 w]))))))
+
+  (upper-triangle-matrix [amat]
+    (let [ nodes (seq (.nodes amat))
+           amat-dim (count nodes)
+           weights (.weights amat) ]
+      (cons nodes                           ; prepend node name labels
+        (partition amat-dim                 ; divide vector into rows
+          (for [k1 nodes k2 nodes]          ; for all possible keys
+            (if (< (.compareTo k1 k2) 0)    ; for upper triangle keys
+              (get weights (seq [k1 k2]) 0) ; get actual weight
+              0))))))                       ; return zero for all other keys
 
   (write-lower-triangle [amat]
     (println "Source,Target,Type,Weight")
@@ -83,10 +135,22 @@
         (doseq [col cols] (print col))
         (println))))
 
+  (write-lower-triangle-matrix [amat]
+    (doseq [row (.lower-triangle-matrix amat)]
+      (let [cols (interpose ", " row)]
+        (doseq [col cols] (print col))
+        (println))))
+
   (write-upper-triangle [amat]
     (println "Source,Target,Type,Weight")
     (doseq [t (.upper-triangle amat)]
       (println (str (first t) "," (second t) ",Undirected," (nth t 2)))))
+
+  (write-upper-triangle-matrix [amat]
+    (doseq [row (.upper-triangle-matrix amat)]
+      (let [cols (interpose ", " row)]
+        (doseq [col cols] (print col))
+        (println))))
 )
 
 
