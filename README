@@ -1,10 +1,33 @@
 # ica2gat
 
-Clojure program to generate data for graph analysis tools from ICA input
+Clojure program to generate data for graph analysis tools from ICA input.
+
+This program reads sets of node names, representing the "components"
+found by Independent Component Analysis and produces data files
+suitable for ingestion by Graph Analysis Tools. The types of output
+data files produced may be specified on the command line and currently
+includes a sequence of node adjacency pairs (for Gepphi) and/or an
+adjacency matrix (for Olaf Sporns' Brain Connectivity Toolbox (MATLAB)).
+
+The ICA components are represented in the input file as a Clojure
+data structure. The input data structure must be a Clojure Sequence of
+Sets. Each set contains the node names for the nodes of a single ICA
+component.
+
+Example input data structure with 3 components:
+  [ #{LGN STG_R STG_L} #{Vermis LGN BA1} #{BA1 BA2 LGN STG_R Brocas} ]
+
+
 
 ## Usage
 
-java -jar ica2gat.jar [-d] [-g outfile.g] [-m outfile.m] infile
+java -jar ica2gat.jar [-d] (-g outfile.g | -m outfile.m) infile
+
+where:
+   -d = treat all nodes as directed (CURRENTLY NOT IMPLEMENTED)
+   -g = output a node pair sequence file (for Gepphi)
+   -m = output a CSV adjacency matrix (for BCT in MATLAB)
+
 
 ## License
 
