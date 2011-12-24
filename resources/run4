@@ -1,10 +1,7 @@
-[
-#{Cingulate_R BG_R Insula_R STG_R IPL_R IFG_R Cingulate_L BG_L Insula_L STG_L Precentral_L Cerebellum_L Vermis}
-#{Cingulate_R BG_R Thalamus_R Insula_R MTG_R Precentral_R Cingulate_L BG_L Thalamus_L Insula_L STG_L Cuneus_L IPL_L MFG_L}
-#{Cingulate_R BG_R Thalamus_R Insula_R Precentral_R STG_R Thalamus_L Insula_L IPL_L MTG_L CerebellarTonsil_L}
-#{IPL_R MFG_R Cerebellum_R Vermis IPL_L Thalamus_L MFG_L MTG_L}
-#{Parahippocampus_R STG_R Parahippocampus_L Ant_Cing_L}
-#{STG_R Precentral_R STG_L Precentral_L}
-#{STG_R Cerebellum_R Cuneus_R Precentral_R STG_L Cingulate_L Precentral_L BG_L}
-]
-
+Cingulate_R,BG_R,Insula_R,STG_R,IPL_R,IFG_R,Cingulate_L,BG_L,Insula_L,STG_L,Precentral_L,Cerebellum_L,Vermis
+Cingulate_R,BG_R,Thalamus_R,Insula_R,MTG_R,Precentral_R,Cingulate_L,BG_L,Thalamus_L,Insula_L,STG_L,Cuneus_L,IPL_L,MFG_L
+Cingulate_R,BG_R,Thalamus_R,Insula_R,Precentral_R,STG_R,Thalamus_L,Insula_L,IPL_L,MTG_L,CerebellarTonsil_L
+IPL_R,MFG_R,Cerebellum_R,Vermis,IPL_L,Thalamus_L,MFG_L,MTG_L
+Parahippocampus_R,STG_R,Parahippocampus_L,Ant_Cing_L
+STG_R,Precentral_R,STG_L,Precentral_L
+STG_R,Cerebellum_R,Cuneus_R,Precentral_R,STG_L,Cingulate_L,Precentral_L,BG_L

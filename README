@@ -10,13 +10,12 @@ includes a sequence of node adjacency tuples (for Gephi) and/or partial
 or complete adjacency matrices (for Olaf Sporns' Brain Connectivity Toolbox
 (in MATLAB)).
 
-The ICA components are represented in the input file as a Clojure
-data structure. The input data structure must be a Clojure Sequence of
-Sets. Each set contains the node names for the nodes of a single ICA
-component.
-
-Example input data structure with 3 components:
-  [ #{LGN STG_R STG_L} #{Vermis LGN BA1} #{BA1 BA2 LGN STG_R Brocas} ]
+Each line of the input data file contains a comma-separated list of
+the node names for the nodes of a single ICA component. The node names
+must not contain spaces or quotes. Example input data file with 3 components:
+   LGN, STG_R, STG_L
+   BA1, BA2
+   STG_L, LGN, BA1, BA45
 
 The output files will be named according to the specified contents and
 the required basename. For example, the output file for the entire

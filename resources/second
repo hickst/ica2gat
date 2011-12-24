@@ -1,6 +1,4 @@
-[
-#{"ant" "cat" "zebra"}
-#{"ant" "bat" "cat" "dog"}
-#{"eel" "fox" "ant" "cat"}
-#{"zebra" "fox" "ant"}
-]
+ant, cat, zebra
+ant, bat, cat, dog
+eel, fox, ant, cat
+zebra, fox, ant

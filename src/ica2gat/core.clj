@@ -2,16 +2,21 @@
   (:require [clojure.java.io :as io])
   (:require [clojure.tools.cli :as cli])
   (:require [ica2gat.adjmat])
+  (:use [clojure.string :only (split)])
   (:gen-class)
 )
 
 (defn read-components [filename]
-  "Read the ICA components, as a Clojure data structure, directly from
-   the specified file. The component data structure must be a sequence of
-   sets. Each set contains the node names for the nodes of a single ICA
-   component. Ex: [ #{LGN STG_R STG_L} #{Vermis LGN BA1} #{BA1 BA2 LGN} ]"
-  (with-open [rdr (java.io.PushbackReader. (io/reader filename))]
-    (read rdr)))
+  "Read the ICA components into a Clojure data structure from
+   the specified CSV file. Each line of the input data file represents
+   the set of node names for the nodes of a single ICA.
+   component. Example input file with 3 components:
+      LGN, STG_R, STG_L
+      BA1, BA2
+      STG_L, LGN, BA1, BA45"
+  (let [ lines (line-seq (io/reader filename))
+         comma-ws #"(\,|\s)+" ]             ; regexp to match commas and whitespace
+    (map #(set (split % comma-ws)) lines)))
 
 
 (defn -main [ & args]
