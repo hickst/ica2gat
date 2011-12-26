@@ -85,4 +85,6 @@
         amat)))
   )
 
-;; (-main "-mat" "-o" "basename" "resources/simple")
+;; (ns ica2gat.core)
+;; (load "core")
+;; (def am (-main "-mat" "-o" "basename" "resources/simple"))
