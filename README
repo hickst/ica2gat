@@ -25,9 +25,7 @@ as the basename argument.
 
 ## Usage
 
-java -jar ica2gat.jar [-d] (-glt outfile | -mat outfile) infile
-
-java -jar ica2gat.jar [-d] (-glt | -gut | -mat | -mlt | -mut)... -o outfile-basename infile-name
+java -jar ica2gat.jar (-glt | -gut | -mat | -mlt | -mut)... -o outfile-basename infile-name
 
 where:
    -glt = output a list of lower triangle data tuples (for Gephi)

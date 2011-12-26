@@ -19,6 +19,11 @@
     (map #(set (split % comma-ws)) lines)))
 
 
+(defn make-output-type-writer [basename output-type]
+  (let [ofilename (str basename "_" (name output-type) ".csv")]
+    (io/writer ofilename)))
+
+
 (defn -main [ & args]
   (let [ usage "Usage: java -jar ica2gat.jar (-glt | -gut | -mat | -mlt | -mut)... -o outfile-basename infile-name"
          [options other-args flag-usage]
@@ -31,13 +36,14 @@
              ["-mut" "Output upper triangle of adjacency matrix (for BCT in MATLAB)" :flag true]
              ["-o" "The basename (without extension) for the output file(s)"]) ]
 
-    ; if user asks for help, print usage messages and exit
+    ;; if user asks for help, print usage messages and exit
     (if (:h options)
       (do
         (println usage)
         (println flag-usage)
         (System/exit 1)))
 
+    ;; check for any missing arguments
     (if (not-any? identity (map #(% options) #{:glt :gut :mat :mlt :mut}))
       (do
         (println "ERROR: Required output type argument is missing.")
@@ -60,9 +66,23 @@
           (println flag-usage)
           (System/exit 4)))
 
+      ;; create an adjacency matrix using the given inputs
       (let [ components (read-components infile)
-             amat (ica2gat.adjmat/make-adjacency-matrix components) ]
-        amat)))
-)
+             amat (ica2gat.adjmat/make-adjacency-matrix components)
+             flag-method-map {:glt ica2gat.adjmat/write-lower-triangle
+                              :gut ica2gat.adjmat/write-upper-triangle
+                              :mat ica2gat.adjmat/write-matrix
+                              :mlt ica2gat.adjmat/write-lower-triangle-matrix
+                              :mut ica2gat.adjmat/write-upper-triangle-matrix} ]
 
-;; (["-main" "Esources/sample-input-file")" ]
+        ;; write an output file for each given output type flag
+        (doseq [key (keys flag-method-map)]
+          (if (key options)
+            (let [ wrtr (make-output-type-writer (:o options) key)
+                   method (key flag-method-map) ]
+              (binding [*out* wrtr] (doto amat method)))))
+
+        amat)))
+  )
+
+;; (-main "-mat" "-o" "basename" "resources/simple")
