@@ -19,9 +19,29 @@
     (map #(set (split % comma-ws)) lines)))
 
 
-(defn make-output-type-writer [basename output-type]
-  (let [ofilename (str basename "_" (name output-type) ".csv")]
-    (io/writer ofilename)))
+(defn write-output [amat basename output-type method]
+  "Write an output file for the given output-type using the given method"
+  (let [ ofilename (str basename "_" (name output-type) ".csv")
+         wrtr (io/writer ofilename) ]
+    (binding [*out* wrtr] (doto amat method))))
+
+
+(defmulti write-output-type (fn [output-type _ _] output-type))
+
+(defmethod write-output-type :glt [output-type amat basename]
+  (write-output amat basename :glt ica2gat.adjmat/write-lower-triangle))
+
+(defmethod write-output-type :gut [output-type amat basename]
+  (write-output amat basename :gut ica2gat.adjmat/write-upper-triangle))
+
+(defmethod write-output-type :mat [output-type amat basename]
+  (write-output amat basename :mat ica2gat.adjmat/write-matrix))
+
+(defmethod write-output-type :mlt [output-type amat basename]
+  (write-output amat basename :mlt ica2gat.adjmat/write-lower-triangle-matrix))
+
+(defmethod write-output-type :mut [output-type amat basename]
+  (write-output amat basename :mut ica2gat.adjmat/write-upper-triangle-matrix))
 
 
 (defn -main [ & args]
@@ -66,22 +86,13 @@
           (println flag-usage)
           (System/exit 4)))
 
-      ;; create an adjacency matrix using the given inputs
+      ;; create an adjacency matrix using the given inputs and
+      ;; write an output file for each given output type flag
       (let [ components (read-components infile)
-             amat (ica2gat.adjmat/make-adjacency-matrix components)
-             flag-method-map {:glt ica2gat.adjmat/write-lower-triangle
-                              :gut ica2gat.adjmat/write-upper-triangle
-                              :mat ica2gat.adjmat/write-matrix
-                              :mlt ica2gat.adjmat/write-lower-triangle-matrix
-                              :mut ica2gat.adjmat/write-upper-triangle-matrix} ]
-
-        ;; write an output file for each given output type flag
-        (doseq [key (keys flag-method-map)]
-          (if (key options)
-            (let [ wrtr (make-output-type-writer (:o options) key)
-                   method (key flag-method-map) ]
-              (binding [*out* wrtr] (doto amat method)))))
-
+             amat (ica2gat.adjmat/make-adjacency-matrix components) ]
+        (doseq [output-type #{:glt :gut :mat :mlt :mut}]
+          (if (output-type options)
+            (write-output-type output-type amat (:o options))))
         amat)))
   )
 
