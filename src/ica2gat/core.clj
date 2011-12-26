@@ -14,7 +14,7 @@
       LGN, STG_R, STG_L
       BA1, BA2
       STG_L, LGN, BA1, BA45"
-  (let [ lines (line-seq (io/reader filename))
+  (let [ lines (filter #(not (re-matches #"^\s*$" %)) (line-seq (io/reader filename)))
          comma-ws #"(\,|\s)+" ]             ; regexp to match commas and whitespace
     (map #(set (split % comma-ws)) lines)))
 
