@@ -20,10 +20,9 @@
 
 
 (defn -main [ & args]
-  (let [ usage "Usage: java -jar ica2gat.jar [-d] (-glt | -gut | -mat | -mlt | -mut)... -o outfile-basename infile-name"
+  (let [ usage "Usage: java -jar ica2gat.jar (-glt | -gut | -mat | -mlt | -mut)... -o outfile-basename infile-name"
          [options other-args flag-usage]
            (cli/cli args
-             ["-d"   "Indicates the input contains directed nodes" :flag true]
              ["-glt" "Output a list of lower triangle data tuples (for Gephi)" :flag true]
              ["-gut" "Output a list of upper triangle data tuples (for Gephi)" :flag true]
              ["-h"   "Show usage message for this program" :flag true]
@@ -31,18 +30,39 @@
              ["-mlt" "Output lower triangle of adjacency matrix (for BCT in MATLAB)" :flag true]
              ["-mut" "Output upper triangle of adjacency matrix (for BCT in MATLAB)" :flag true]
              ["-o" "The basename (without extension) for the output file(s)"]) ]
-    (if (:h options)                        ; if user asks for help
-      (do                                   ; then print usage messages
+
+    ; if user asks for help, print usage messages and exit
+    (if (:h options)
+      (do
         (println usage)
-        (println flag-usage))
-      (if-let [infile (first other-args)]   ; else get input file
-        (let [ components (read-components infile)
-              amat (ica2gat.adjmat/make-adjacency-matrix components) ]
-          amat)
+        (println flag-usage)
+        (System/exit 1)))
+
+    (if (not-any? identity (map #(% options) #{:glt :gut :mat :mlt :mut}))
+      (do
+        (println "ERROR: Required output type argument is missing.")
+        (println usage)
+        (println flag-usage)
+        (System/exit 2)))
+
+    (if (not (:o options))
+      (do
+        (println "ERROR: Required output file basename argument is missing.")
+        (println usage)
+        (println flag-usage)
+        (System/exit 3)))
+
+    (let [infile (first other-args)]
+      (if (nil? infile)
         (do
-          (println "ERROR: Required input filename missing.")
+          (println "ERROR: Required input filename argument is missing.")
           (println usage)
-          (println flag-usage)))))
+          (println flag-usage)
+          (System/exit 4)))
+
+      (let [ components (read-components infile)
+             amat (ica2gat.adjmat/make-adjacency-matrix components) ]
+        amat)))
 )
 
-;; (-main "resources/sample-input-file")
+;; (["-main" "Esources/sample-input-file")" ]

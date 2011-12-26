@@ -30,7 +30,6 @@ java -jar ica2gat.jar [-d] (-glt outfile | -mat outfile) infile
 java -jar ica2gat.jar [-d] (-glt | -gut | -mat | -mlt | -mut)... -o outfile-basename infile-name
 
 where:
-   -d = treat all nodes as directed (CURRENTLY NOT IMPLEMENTED)
    -glt = output a list of lower triangle data tuples (for Gephi)
    -gut = output a list of upper triangle data tuples (for Gephi)
    -mat = output an adjacency matrix (for BCT in MATLAB)
