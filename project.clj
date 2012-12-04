@@ -4,5 +4,5 @@
                   [org.clojure/tools.cli "0.2.1"]
                   [org.clojure/math.combinatorics "0.0.2"] ]
   :main ica2gat.core
-  :uberjar-name ica2gat.jar
+  :uberjar-name "ica2gat.jar"
 )
